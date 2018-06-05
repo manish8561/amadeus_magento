@@ -1,0 +1,63 @@
+<?xml version="1.0"?>   
+<layout version="0.1.0">   
+  <amedus_index_index>   
+    <reference name="head">
+       <action method="addItem">
+        <type>js_css</type>
+        <name>amedus/css/style.css</name>
+        <params/>
+      </action>
+        <action method="addJs">
+          <script>amedus/jquery-ui.min.js</script>
+        </action>
+       <action method="addItem"><type>js_css</type><name>calendar/calendar-blue2.css</name><params/></action>
+      <action method="addItem"><type>js</type><name>calendar/calendar.js</name></action>
+      <action method="addItem"><type>js</type><name>calendar/calendar-setup.js</name></action>
+    </reference>
+    <reference name="root">           
+      <action method="setTemplate"><template>page/1column.phtml</template></action>   
+    </reference>   
+    <reference name="content">
+      <block type="core/html_calendar" name="html_calendar" as="html_calendar" template="page/js/calendar.phtml"/>
+      <block type="amedus/index" name="amedus_index" template="amedus/index.phtml"/>   
+    </reference>   
+  </amedus_index_index> 
+  <amedus_index_search>   
+  	<reference name="head">
+      <action method="addItem">
+        <type>js_css</type>
+        <name>amedus/css/style.css</name>
+        <params/>
+      </action>
+        <action method="addJs">
+        	<script>amedus/jquery-ui.min.js</script>
+        </action>
+       <action method="addItem"><type>js_css</type><name>calendar/calendar-blue2.css</name><params/></action>
+      <action method="addItem"><type>js</type><name>calendar/calendar.js</name></action>
+      <action method="addItem"><type>js</type><name>calendar/calendar-setup.js</name></action>
+    </reference>
+    <reference name="root">           
+      <action method="setTemplate"><template>page/1column.phtml</template></action>   
+    </reference>   
+    <reference name="content">
+      <block type="core/html_calendar" name="html_calendar" as="html_calendar" template="page/js/calendar.phtml"/>
+      <block type="amedus/search" name="amedus_search" template="amedus/search.phtml"/>   
+    </reference>   
+  </amedus_index_search>   
+  <amedus_index_view>   
+    <reference name="head">
+      <action method="addItem">
+        <type>js_css</type>
+        <name>amedus/css/style.css</name>
+        <params/>
+      </action>     
+    </reference>
+    <reference name="root">           
+      <action method="setTemplate"><template>page/1column.phtml</template></action>   
+    </reference>   
+    <reference name="content">      
+      <block type="amedus/search" name="amedus_view" template="amedus/view.phtml"/>   
+    </reference>   
+  </amedus_index_view>   
+</layout>   
+	
