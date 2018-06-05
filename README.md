@@ -1,5 +1,5 @@
 # amedus_magento website
-This is Amedus Flight booking website in magento 1.9.x version fully costomized.
+This is Amedus Flight booking website in magento 1.9.x version fully customized.
 
 Requirements:
 1. Amedus sandox api access
