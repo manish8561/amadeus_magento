@@ -1,0 +1,361 @@
+<?php echo $this->getChildHtml('html_calendar') ?>
+<div class="container flight_search_form">
+   <ul class="nav nav-tabs">
+      <li class="active tab-li">
+         <a  onclick="tabFunction(this,'twoway');">Return</a>
+      </li>
+      <li class="tab-li"><a onclick="tabFunction(this,'oneway');">One Way</a>
+      </li>
+   </ul>
+   <div class="tab-content ">
+      <div class="tab-pane active" id="twoway">
+         <br>
+         <?php if(Mage::getSingleton('core/session')->getFlightError()){?>
+         <div class="alert alert-danger"><?php echo Mage::getSingleton('core/session')->getFlightError();?></div>
+         <?php Mage::getSingleton('core/session')->unsFlightError();?>
+         <?php }?>
+
+         <form class="form-horizontal container" action="<?php echo Mage::getUrl('amedus/index/search');?>" method="get" id="two_way_form">
+            <input type="hidden" name="is_return" value="yes">
+            <input type="hidden" name="origin_label" class="origin_label">
+            <input type="hidden" name="destination_label" class="destination_label">
+            <div class="row">
+               <div class="col-md-3 col-sm-3">                       
+                  <input type="text" class="form-control" id="org" placeholder="Origin" name="origin" required="required">
+                           
+               </div>
+               <div class="col-md-3 col-sm-3">                  
+                  <input type="text" class="form-control" id="des" placeholder="Destination" name="destination" required="required">
+               </div>
+               <div class="col-md-3 col-sm-3">    
+                  <input type="text" class="form-control" id="from" name="depature_date" placeholder="Depature date" required="required">
+               </div>
+               <div class="col-md-3 col-sm-3">    
+                  <input type="text" class="form-control" id="to" name="return_date" placeholder="Return date" required="required">
+               </div>
+            </div>
+            <br>
+               <div class="row">
+               <div class="col-md-3 col-sm-3">    
+                     <select name="no_adults" class="form-control" required="required">
+                        <option value="">Adults</option>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                        <option>6</option>
+                        <option>7</option>
+                        <option>8</option>
+                        <option>9</option>
+                     </select>
+               </div>
+               <div class="col-md-3 col-sm-3">    
+                     <select name="no_children" class="form-control" >
+                        <option value="">Children</option>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                        <option>6</option>
+                        <option>7</option>
+                        <option>8</option>
+                        <option>9</option>
+                     </select>
+               </div>
+               <div class="col-md-3 col-sm-3">    
+                     <select name="no_infants" class="form-control" >
+                        <option value="">Infants</option>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>                        
+                     </select>
+               </div>
+               <div class="col-md-3 col-sm-3">    
+                     <select name="travel_class" class="form-control" >
+                        <option value="ECONOMY">Economy</option>
+                        <option value="BUSINESS">Business</option>
+                        <option value="FIRST">First</option>
+                        <option value="PREMIUM">Premium Economy</option>                        
+                     </select>
+               </div>
+               
+            </div>
+            <br>
+            <div class="row">
+               <div class="col-md-3 col-sm-3 pull-right">    
+                    <button type="submit" class="btn btn-success pull-right">Search</button>
+               </div>
+            </div>            
+         </form>
+      </div>
+      <div class="tab-pane" id="oneway">
+        <br>
+         <?php if(Mage::getSingleton('core/session')->getFlightError()){?>
+         <div class="alert alert-danger"><?php echo Mage::getSingleton('core/session')->getFlightError();?></div>
+         <?php Mage::getSingleton('core/session')->unsFlightError();?>
+         <?php }?>
+
+         <form class="form-horizontal container" action="<?php echo Mage::getUrl('amedus/index/search');?>" method="get" id="two_way_form">
+            <input type="hidden" name="is_return" value="yes">
+            <input type="hidden" name="origin_label" class="origin_label">
+            <input type="hidden" name="destination_label" class="destination_label">
+            <div class="row">
+               <div class="col-md-3 col-sm-3">                       
+                  <input type="text" class="form-control" id="org" placeholder="Origin" name="origin" required="required">                           
+               </div>
+               <div class="col-md-3 col-sm-3">                  
+                  <input type="text" class="form-control" id="des" placeholder="Destination" name="destination" required="required">
+               </div>
+               <div class="col-md-3 col-sm-3">    
+                  <input type="text" class="form-control" id="from2" name="depature_date" placeholder="Depature date" required="required">
+               </div>               
+            </div>
+            <br>
+               <div class="row">
+               <div class="col-md-3 col-sm-3">    
+                     <select name="no_adults" class="form-control" required="required">
+                        <option value="">Adults</option>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                        <option>6</option>
+                        <option>7</option>
+                        <option>8</option>
+                        <option>9</option>
+                     </select>
+               </div>
+               <div class="col-md-3 col-sm-3">    
+                     <select name="no_children" class="form-control" >
+                        <option value="">Children</option>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                        <option>6</option>
+                        <option>7</option>
+                        <option>8</option>
+                        <option>9</option>
+                     </select>
+               </div>
+               <div class="col-md-3 col-sm-3">    
+                     <select name="no_infants" class="form-control" >
+                        <option value="">Infants</option>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>                        
+                     </select>
+               </div>
+               <div class="col-md-3 col-sm-3">    
+                     <select name="travel_class" class="form-control" >
+                        <option value="ECONOMY">Economy</option>
+                        <option value="BUSINESS">Business</option>
+                        <option value="FIRST">First</option>
+                        <option value="PREMIUM">Premium Economy</option>                        
+                     </select>
+               </div>
+               
+            </div>
+            <br>
+            <div class="row">
+               <div class="col-md-3 col-sm-3 pull-right">    
+                    <button type="submit" class="btn btn-success pull-right">Search</button>
+               </div>
+            </div>            
+         </form>
+      </div>
+   </div>
+</div>
+<div id="loader"><img src="<?php echo $this->getSkinUrl('images/ajax-loader.gif');?>"></div>
+
+<script type="text/javascript">
+function tabFunction(obj,id){
+   jQuery('.tab-pane').removeClass('active');
+   jQuery('.tab-li').removeClass('active');
+   jQuery('#'+id).addClass('active');
+   jQuery(obj).parent().addClass('active');
+}
+jQuery(function() {
+    jQuery("#org1,#org").autocomplete({
+      source: function(e, t) {
+        if(e.term.length > 2){
+          jQuery.ajax({
+            /*url: "https://www.igoair.com/homeapi/autcomplete",*/
+            url: "<?php echo Mage::getUrl('amedus/index/autocomplete');?>",
+            dataType: "json",
+            type:'POST',
+            data: {            
+              term: e.term
+            },
+            beforeSend: function(){
+              jQuery('#loader').show();
+            },
+            success: function(data) {
+              jQuery('#loader').hide();
+              t(jQuery.map( data, function( item ) {
+                return {
+                  label: item.name+', '+item.city_name+' ['+item.code+']', // Set the display lebel for the searched list of company names which we're getting from server side coding.
+                  value: item.code // Set the raw value of each shown items.
+                }
+              }));              
+            },
+            error: function(e){
+              jQuery('#loader').hide();
+              alert("Enter valid location");
+            }
+          });
+        }     
+      },
+      minLength: 3,
+      autoFocus: true,
+      select: function(e, t) {
+        console.log(t.item ? "Selected: " + t.item.label : "Nothing selected, input was " + this.value);
+        var a = "#" + jQuery(this).attr("id");
+        console.log(t.item.label);
+        jQuery('.origin_label').val(t.item.value);       
+        t.item.value =  t.item.label;
+      }
+    });
+    jQuery("#des1,#des").autocomplete({
+      source: function(e, t) {
+        if(e.term.length > 2){
+          jQuery.ajax({
+            url: "<?php echo Mage::getUrl('amedus/index/autocomplete');?>",
+            dataType: "json",
+            type:'POST',
+            data: {            
+              term: e.term
+            }, 
+            beforeSend: function(){            
+              jQuery('#loader').show();
+            },
+            success: function(data) {
+                jQuery('#loader').hide();
+                t(jQuery.map( data, function( item ) {
+                  return {
+                    label: item.name+', '+item.city_name+' ['+item.code+']', // Set the display lebel for the searched list of company names which we're getting from server side coding.
+                    value: item.code // Set the raw value of each shown items.
+                  }
+                }));              
+              },
+            error: function(e){
+              jQuery('#loader').hide();
+              alert("enter valid location");
+            }
+          });
+       }
+      },
+      minLength: 3,
+      autoFocus: true,
+      select: function(e, t) {
+        console.log(t.item ? "Selected: " + t.item.label : "Nothing selected, input was " + this.value);
+        var a = "#" + jQuery(this).attr("id");
+        jQuery('.destination_label').val(t.item.value);        
+        t.item.value =  t.item.label;
+        //jQuery(a).val(t.item.label);
+      }
+    });
+});
+</script>
+<script type="text/javascript">// <![CDATA[
+var depature_date = new Date();
+/* depature date for two way*/
+Calendar.setup({
+   inputField : 'from',
+   ifFormat : '%m/%d/%Y',
+   showsTime: false,
+   button : 'date_select_trig',
+   singleClick : true,
+   disableFunc: function(date) {      
+   //disable previous day in datepicker
+      var now= new Date();
+     
+      if(date.getFullYear()<now.getFullYear())
+      {
+         return true;
+      }
+      if(date.getFullYear()==now.getFullYear())
+      {
+         if(date.getMonth()<now.getMonth())
+         {
+            return true;
+         }
+      }
+      if(date.getMonth()==now.getMonth())
+      {
+         if(date.getDate()<now.getDate())
+         {
+            return true;
+         }
+      }
+   },
+});
+/* for return date two way*/
+
+Calendar.setup({
+   inputField : 'to',
+   ifFormat : '%m/%d/%Y',
+   showsTime: false,
+   button : 'date_select_trig',
+   singleClick : true,
+   disableFunc: function(date) {
+   //disable previous day in datepicker
+      depature_date = new Date(jQuery('#from').val());
+      var now= depature_date;
+     
+      if(date.getFullYear()<now.getFullYear())
+      {
+         return true;
+      }
+      if(date.getFullYear()==now.getFullYear())
+      {
+         if(date.getMonth()<now.getMonth())
+         {
+            return true;
+         }
+      }
+      if(date.getMonth()==now.getMonth())
+      {
+         if(date.getDate()<now.getDate())
+         {
+            return true;
+         }
+      }      
+   },
+});
+/*for one departure date*/
+Calendar.setup({
+   inputField : 'from2',
+   ifFormat : '%m/%d/%Y',
+   showsTime: false,
+   button : 'date_select_trig',
+   singleClick : true,
+   disableFunc: function(date) {      
+   //disable previous day in datepicker
+      var now= new Date();
+     
+      if(date.getFullYear()<now.getFullYear())
+      {
+         return true;
+      }
+      if(date.getFullYear()==now.getFullYear())
+      {
+         if(date.getMonth()<now.getMonth())
+         {
+            return true;
+         }
+      }
+      if(date.getMonth()==now.getMonth())
+      {
+         if(date.getDate()<now.getDate())
+         {
+            return true;
+         }
+      }
+   },
+});
+// ]]></script>

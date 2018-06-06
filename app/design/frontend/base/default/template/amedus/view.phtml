@@ -1,0 +1,373 @@
+<?php 
+$helper = Mage::helper('amedus');
+$product = $this->getFlight();
+/*echo '<pre>';
+print_r($product);
+echo '</pre>';*/
+$basic_search = json_decode($product['basic_search'], true);
+$basic_search_json =$product['basic_search'];
+
+$itinerary = json_decode($product['itinerary'], true);
+$itn_json = $product['itinerary'];
+$product_name = $basic_search['origin'] .' - '.$basic_search['destination'];
+
+$total_price = $product['total_price'];
+$Description = $product_name;
+$no_adults = $basic_search['no_adults'];
+$no_children = ($basic_search['no_children'] > 0)?$basic_search['no_children']:0;
+$no_infants = ($basic_search['no_infants'] > 0)?$basic_search['no_infants']:0;
+
+?>
+
+<div class="col-main">  
+   <div id="messages_product_view"></div>
+   <div class="product-view">
+      <div class="product-essential">
+        <?php if($itinerary){
+                $total_price = isset($itinerary['fare']['total_price'])?$itinerary['fare']['total_price']:0;
+                $restrictions = '';
+                if($itinerary['fare']['restrictions']['refundable']){
+                  $restrictions .= '<p>Fare is refundable.</p>';
+                }else {
+                  $restrictions .= '<p>Fare is not refundable.</p>';
+                }
+                if($itinerary['fare']['restrictions']['change_penalties']){
+                  $restrictions .= '<p>Change in ticket is chargable.</p>';
+                }
+                $itn_json = json_encode($itinerary);
+                $Description .= '<br>'.$restrictions;
+                ?>
+         <form action="http://localhost/amedus_magento/checkout/cart/add/uenc/aHR0cDovL2xvY2FsaG9zdC9hbWVkdXNfbWFnZW50by9mbGlnaHRzL2xvbi1kZWwuaHRtbA,,/product/1/form_key/FHNpyDoyKMoH8wYA/" method="post" id="product_addtocart_form">
+            <input name="form_key" type="hidden" value="FHNpyDoyKMoH8wYA">
+            <div class="no-display">
+               <input type="hidden" name="product" value="1" id="product_id">
+               <input type="hidden" name="related_product" id="related-products-field" value="">
+               <input type="hidden" name="basic_search" value='<?php echo $basic_search_json;?>'>  
+                 <input type="hidden" name="total_price" value="<?php echo $total_price;?>">  
+                 <input type="hidden" name="itinerary" value='<?php echo $itn_json;?>'>  
+            </div>
+            <div class="product-img-box">
+               <div class="product-name">
+                  <h1><?php echo $product_name;?></h1>
+               </div>
+               <?php foreach($itinerary['itineraries'] as $itnf){
+                     
+                      $outbound = $itnf['outbound']['flights'];
+                      $inbound = isset($itnf['inbound']['flights'])?$itnf['inbound']['flights']:array();
+                      $l = count($outbound);
+                      $k = count($inbound); ?> 
+
+                      <?php if($l > 0){
+                        $nonstop = false;
+                        if($l == 1) $nonstop = true;?> <!-- Outbound flights -->
+                        <?php foreach($outbound as $flight){
+                          $airline = $flight['marketing_airline'];
+                          $flight_number = $flight['flight_number'];
+                          $aircraft = $flight['aircraft'];
+                          $travel_class = $flight['booking_info']['travel_class'];
+                          $booking_code = $flight['booking_info']['booking_code'];
+                          $seats_remaining = $flight['booking_info']['seats_remaining'];
+
+                          $org_ap = $flight['origin']['airport'];
+                          $des_ap = $flight['destination']['airport'];
+                          $depature_at = $flight['departs_at'];
+                          $arrives_at = $flight['arrives_at'];
+                          
+                          $duration = $helper->flight_duration($depature_at,$arrives_at);?>
+                        <div class="row">
+                          <div class="col-md-3"><img width="100px" src="https://www.igoair.com/images/airline/<?php echo $airline;?>.png"></div>
+                          <div class="col-md-3">
+                            <strong><?php echo $org_ap;?>&nbsp;<img src="<?php echo $this->getSkinUrl('images/transparent_arrow_29x28.png');?>" style="display: inline-block;">&nbsp;<?php echo $des_ap;?></strong>
+                            <p><?php echo $duration;?></p>
+                          </div>
+                          <div class="col-md-3">
+                            <p><strong><?php echo $airline.' '.$flight_number;?></strong></p>
+                            <p>Class: <?php echo $travel_class;?></p>
+                            <p>Seats: <?php echo $seats_remaining;?></p>
+                          </div>
+                          <div class="col-md-3">                           
+                            <p>Departure: <?php echo date('d/m/Y h:i',strtotime($depature_at));?></p>
+                            <p>Arrival: <?php echo date('d/m/Y h:i',strtotime($arrives_at));?></p>                            
+                          </div>                          
+                        </div>
+                       
+                       <?php }?>
+                     <?php }?>
+                     <?php if($l > 0){
+                        $nonstop = false;
+                        if($l == 1) $nonstop = true;?> <!-- Inbound flights -->
+                        <?php foreach($inbound as $flight){
+                          $airline = $flight['marketing_airline'];
+                          $flight_number = $flight['flight_number'];
+                          $aircraft = $flight['aircraft'];
+                          $travel_class = $flight['booking_info']['travel_class'];
+                          $booking_code = $flight['booking_info']['booking_code'];
+                          $seats_remaining = $flight['booking_info']['seats_remaining'];
+
+                          $org_ap = $flight['origin']['airport'];
+                          $des_ap = $flight['destination']['airport'];
+                          $depature_at = $flight['departs_at'];
+                          $arrives_at = $flight['arrives_at'];
+                          
+                          $duration = $helper->flight_duration($depature_at,$arrives_at);?>
+                        <div class="row">
+                          <div class="col-md-3"><img width="100px" src="https://www.igoair.com/images/airline/<?php echo $airline;?>.png"></div>
+                          <div class="col-md-3">
+                            <strong><?php echo $org_ap;?>&nbsp;<img src="<?php echo $this->getSkinUrl('images/reverse_transparent_arrow_29x28.png');?>" style="display: inline-block;">&nbsp;<?php echo $des_ap;?></strong>
+                            <p><?php echo $duration;?></p>
+                          </div>
+                          <div class="col-md-3">
+                            <p><strong><?php echo $airline.' '.$flight_number;?></strong></p>
+                            <p>Class: <?php echo $travel_class;?></p>
+                            <p>Seats: <?php echo $seats_remaining;?></p>
+                          </div>
+                          <div class="col-md-3">                           
+                            <p>Departure: <?php echo date('d/m/Y h:i',strtotime($depature_at));?></p>
+                            <p>Arrival: <?php echo date('d/m/Y h:i',strtotime($arrives_at));?></p>                            
+                          </div>
+                          
+                        </div>
+                       <?php }?>
+                     <?php }?>
+               <?php }?>
+               
+            </div>
+            <div class="product-shop">
+               <div class="product-name">
+                  <span class="h1"><?php echo $product_name;?></span>
+               </div>
+               <div class="price-info">
+                  <div class="price-box">
+                     <span class="regular-price" id="product-price-1">
+                     <span class="price">$<?php echo $total_price;?></span></span>
+                  </div>
+               </div>
+               <div class="extra-info">
+                  <p class="availability in-stock">
+                     <span class="label">Availability:</span>
+                     <span class="value">In stock</span>
+                  </p>
+               </div>
+               <div class="short-description">
+                  <div class="std">
+                    <h3>Traveller Information</h3>
+                    <?php for($i=0;$i<$no_adults; $i++){?>
+                    <div class="row">
+                          <div class="col-md-2">
+                            <input type="text" placeholder="First Name" name="adult[<?php echo $i;?>][firstname]" class="form-control" required="required">
+                          </div>
+                          <div class="col-md-2">
+                            <input type="text" placeholder="Middle Name" name="adult[<?php echo $i;?>][middlename]" class="form-control" required="required">
+                          </div>
+                          <div class="col-md-2">
+                            <input type="text" placeholder="Last Name" name="adult[<?php echo $i;?>][lastname]" class="form-control" required="required">
+                          </div>
+                          <div class="col-md-2">                           
+                            <select class="form-control" name="adult[<?php echo $i;?>][gender]" required="required">
+                              <option value="Male">Male</option>
+                              <option value="Female">Female</option>
+                            </select>
+                          </div>
+                          <div class="col-md-2">
+                            <input type="date" placeholder="DOB" name="adult[<?php echo $i;?>][dob]" class="form-control" required="required">
+                          </div> 
+                        </div>
+                        <hr>
+                      <?php }?>
+                      <?php if($no_children > 0){?>
+                        <h5>Children Details</h5>
+                        <?php for($i=0;$i<$no_children; $i++){?>
+                      <div class="row">
+                            <div class="col-md-2">
+                              <input type="text" placeholder="First Name" name="child[<?php echo $i;?>][firstname]" class="form-control" required="required">
+                            </div>
+                            <div class="col-md-2">
+                              <input type="text" placeholder="Middle Name" name="child[<?php echo $i;?>][middlename]" class="form-control" required="required">
+                            </div>
+                            <div class="col-md-2">
+                              <input type="text" placeholder="Last Name" name="child[<?php echo $i;?>][lastname]" class="form-control" required="required">
+                            </div>
+                            <div class="col-md-2">                           
+                              <select class="form-control" name="child[<?php echo $i;?>][gender]" required="required">
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                              </select>
+                            </div>
+                            <div class="col-md-2">
+                              <input type="date" placeholder="DOB" name="child[<?php echo $i;?>][dob]" class="form-control" required="required">
+                            </div> 
+                          </div>
+                          <hr>
+                        <?php }?>
+                      <?php }?>
+                        <?php if($no_infants > 0){?>
+                        <h5>Infants Details</h5>
+                        <?php for($i=0;$i<$no_infants; $i++){?>
+                      <div class="row">
+                            <div class="col-md-2">
+                              <input type="text" placeholder="First Name" name="infant[<?php echo $i;?>][firstname]" class="form-control" required="required">
+                            </div>
+                            <div class="col-md-2">
+                              <input type="text" placeholder="Middle Name" name="infant[<?php echo $i;?>][middlename]" class="form-control" required="required">
+                            </div>
+                            <div class="col-md-2">
+                              <input type="text" placeholder="Last Name" name="infant[<?php echo $i;?>][lastname]" class="form-control" required="required">
+                            </div>
+                            <div class="col-md-2">                           
+                              <select class="form-control" name="infant[<?php echo $i;?>][gender]" required="required">
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                              </select>
+                            </div>
+                            <div class="col-md-2">
+                              <input type="date" placeholder="DOB" name="infant[<?php echo $i;?>][dob]" class="form-control" required="required">
+                            </div> 
+                          </div>
+                          <hr>
+                        <?php }?>
+                      <?php }?>
+                    </div>
+               </div>
+            </div>
+            <div class="add-to-cart-wrapper">
+               <div class="add-to-box">
+                  <div class="add-to-cart">
+                     <div class="qty-wrapper">
+                        <label for="qty">Qty:</label>
+                        <input type="text" pattern="\d*(\.\d+)?" name="qty" id="qty" maxlength="12" value="1" title="Qty" class="input-text qty">
+                     </div>
+                     <div class="add-to-cart-buttons">
+                        <button type="button" title="Add to Cart" class="button btn-cart" onclick="productAddToCartForm.submit(this)"><span><span>Book Now</span></span></button>
+                     </div>
+                  </div>
+                  <span class="or">OR</span>
+                  <ul class="add-to-links">
+                     <li><a href="http://localhost/amedus_magento/wishlist/index/add/product/1/form_key/FHNpyDoyKMoH8wYA/" onclick="productAddToCartForm.submitLight(this, this.href); return false;" class="link-wishlist">Add to Wishlist</a></li>
+                     <li><span class="separator">|</span> <a href="http://localhost/amedus_magento/catalog/product_compare/add/product/1/uenc/aHR0cDovL2xvY2FsaG9zdC9hbWVkdXNfbWFnZW50by9mbGlnaHRzL2xvbi1kZWwuaHRtbA,,/form_key/FHNpyDoyKMoH8wYA/" class="link-compare">Add to Compare</a></li>
+                  </ul>
+                  <ul class="sharing-links">
+                     <li><a href="http://localhost/amedus_magento/sendfriend/product/send/id/1/cat_id/3/" class="link-email-friend" title="Email to a Friend">Email to a Friend</a></li>
+                     <li>
+                        <a href="http://www.facebook.com/sharer.php?s=100&amp;p[url]=http%3A%2F%2Flocalhost%2Famedus_magento%2Fflights%2Flon-del.html&amp;p[images][0]=http%3A%2F%2Flocalhost%2Famedus_magento%2Fmedia%2Fcatalog%2Fproduct%2Fcache%2F1%2Fimage%2F9df78eab33525d08d6e5fb8d27136e95%2F1%2Fi%2F1i.png&amp;p[title]=LON+-+DEL&amp;p[summary]=LON+-+DEL" target="_blank" title="Share on Facebook" class="link-facebook">
+                        Share Facebook        </a>
+                     </li>
+                     <li>
+                        <a href="http://twitter.com/home?status=LON+-+DEL+http%3A%2F%2Flocalhost%2Famedus_magento%2Fflights%2Flon-del.html" target="_blank" title="Share on Twitter" class="link-twitter">Share on Twitter</a>
+                     </li>
+                  </ul>
+               </div>
+            </div>
+            <div class="clearer"></div>
+         </form>
+       <?php }?>
+         <script type="text/javascript">
+            //<![CDATA[
+                var productAddToCartForm = new VarienForm('product_addtocart_form');
+                productAddToCartForm.submit = function(button, url) {
+                    if (this.validator.validate()) {
+                        var form = this.form;
+                        var oldUrl = form.action;
+            
+                        if (url) {
+                           form.action = url;
+                        }
+                        var e = null;
+                        try {
+                            this.form.submit();
+                        } catch (e) {
+                        }
+                        this.form.action = oldUrl;
+                        if (e) {
+                            throw e;
+                        }
+            
+                        if (button && button != 'undefined') {
+                            button.disabled = true;
+                        }
+                    }
+                }.bind(productAddToCartForm);
+            
+                productAddToCartForm.submitLight = function(button, url){
+                    if(this.validator) {
+                        var nv = Validation.methods;
+                        delete Validation.methods['required-entry'];
+                        delete Validation.methods['validate-one-required'];
+                        delete Validation.methods['validate-one-required-by-name'];
+                        // Remove custom datetime validators
+                        for (var methodName in Validation.methods) {
+                            if (methodName.match(/^validate-datetime-.*/i)) {
+                                delete Validation.methods[methodName];
+                            }
+                        }
+            
+                        if (this.validator.validate()) {
+                            if (url) {
+                                this.form.action = url;
+                            }
+                            this.form.submit();
+                        }
+                        Object.extend(Validation.methods, nv);
+                    }
+                }.bind(productAddToCartForm);
+            //]]>
+         </script>
+      </div>
+      <div class="product-collateral toggle-content tabs">         
+         <dl id="collateral-tabs" class="collateral-tabs">
+            <dt class="tab"><span>Description</span></dt>
+            <dd class="tab-container">
+               <div class="tab-content">
+                  <h2>Details</h2>
+                  <div class="std">
+                     <?php echo $Description;?>    
+                  </div>
+               </div>
+            </dd>
+            <dt class="tab last current"><span>Reviews</span></dt>
+            <dd class="tab-container last current">
+               <div class="tab-content">
+                  <div class="box-collateral box-reviews" id="customer-reviews">
+                     <p class="no-rating"><a href="http://localhost/amedus_magento/review/product/list/id/1/category/3/#review-form">Be the first to review this product</a></p>
+                  </div>
+               </div>
+            </dd>
+         </dl>
+      </div>
+     <!--  <div class="box-collateral box-tags">
+         <h2>Product Tags</h2>
+         <form id="addTagForm" action="http://localhost/amedus_magento/tag/index/save/product/1/uenc/aHR0cDovL2xvY2FsaG9zdC9hbWVkdXNfbWFnZW50by9mbGlnaHRzL2xvbi1kZWwuaHRtbA,,/" method="get">
+            <div class="form-add">
+               <label for="productTagName">Add Your Tags:</label>
+               <div class="input-box">
+                  <input type="text" class="input-text required-entry" name="productTagName" id="productTagName">
+               </div>
+               <button type="button" title="Add Tags" class="button" onclick="submitTagForm()">
+               <span>
+               <span>Add Tags</span>
+               </span>
+               </button>
+            </div>
+         </form>
+         <p class="note">Use spaces to separate tags. Use single quotes (') for phrases.</p>
+         <script type="text/javascript">
+            //<![CDATA[
+                var addTagFormJs = new VarienForm('addTagForm');
+                function submitTagForm(){
+                    if(addTagFormJs.validator.validate()) {
+                        addTagFormJs.form.submit();
+                    }
+                }
+            //]]>
+         </script>
+      </div> -->
+   </div>
+   <script type="text/javascript">
+      var lifetime = 3600;
+      var expireAt = Mage.Cookies.expires;
+      if (lifetime > 0) {
+          expireAt = new Date();
+          expireAt.setTime(expireAt.getTime() + lifetime * 1000);
+      }
+      Mage.Cookies.set('external_no_cache', 1, expireAt);
+   </script>
+</div>

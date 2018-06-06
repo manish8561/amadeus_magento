@@ -1,0 +1,55 @@
+.flight_search_form{
+	min-height: 320px;
+}
+#loader{
+	position: absolute; 
+	top: 50%;
+	left: 40%; 
+	display:none;
+}
+.products-grid > li {
+    border: solid 1px;
+    padding: 5px;
+}
+.products-grid .price-box{
+	transform: rotate(-20deg); 
+	background: #d6f16c;
+	padding: 2px;
+}
+.products-grid .buttons{
+	margin-right: 15px;
+	margin-bottom: 10px;
+}
+.flight-category p{
+	margin:0;
+	font-szie:12px;
+}
+.flight_dep{
+	font-size: 10px;
+}
+.product-info{
+	height: 601px;
+    overflow: hidden;
+}
+.product-info hr{
+	margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.product-img-box .row .col-xs-1, .product-img-box .row .col-sm-1, .product-img-box .row .col-md-1, .product-img-box .row .col-lg-1, .product-img-box .row .col-xs-2, .product-img-box .row .col-sm-2, .product-img-box .row .col-md-2, .product-img-box .row .col-lg-2, .product-img-box .row .col-xs-3, .product-img-box .row .col-sm-3, .product-img-box .row .col-md-3, .product-img-box .row .col-lg-3, .product-img-box .row .col-xs-4, .product-img-box .row .col-sm-4, .product-img-box .row .col-md-4, .product-img-box .row .col-lg-4, .product-img-box .row .col-xs-5, .product-img-box .row .col-sm-5, .product-img-box .row .col-md-5, .product-img-box .row .col-lg-5, .product-img-box .row .col-xs-6, .product-img-box .row .col-sm-6, .product-img-box .row .col-md-6, .product-img-box .row .col-lg-6, .product-img-box .row .col-xs-7, .product-img-box .row .col-sm-7, .product-img-box .row .col-md-7, .product-img-box .row .col-lg-7, .product-img-box .row .col-xs-8, .product-img-box .row .col-sm-8, .product-img-box .row .col-md-8, .product-img-box .row .col-lg-8, .product-img-box .row .col-xs-9, .product-img-box .row .col-sm-9, .product-img-box .row .col-md-9, .product-img-box .row .col-lg-9, .product-img-box .row .col-xs-10, .product-img-box .row .col-sm-10, .product-img-box .row .col-md-10, .product-img-box .row .col-lg-10, .product-img-box .row .col-xs-11, .product-img-box .row .col-sm-11, .product-img-box .row .col-md-11, .product-img-box .row .col-lg-11, .product-img-box .row .col-xs-12, .product-img-box .row .col-sm-12, .product-img-box .row .col-md-12, .product-img-box .row .col-lg-12 {
+	padding-right: 0; 
+    padding-left: 0;
+}
+.short-description .row .col-md-2{
+	padding-right: 2px; 
+    padding-left: 2px;
+} 
+.product-img-box .row, .short-description .row{
+	margin-right: 0; 
+    margin-left: 0;
+    font-size: 12px;
+}
+.product-img-box{
+	border:solid 1px;
+	padding:5px;
+}

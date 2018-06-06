@@ -1,0 +1,285 @@
+<?php
+   $_resultCollection=$this->getResults();
+   echo 'results';
+   $currency_code = Mage::app()->getStore()->getCurrentCurrencyCode();
+
+  // echo '<pre>';
+   $currentUrl = Mage::helper('core/url')->getCurrentUrl();
+   $basic_search = $this->getRequest()->getParams();
+   $basic_search_json = json_encode($basic_search);
+
+   $helper = Mage::helper('amedus');
+ //  print_R($basic_search); echo '</pre>';
+?>
+ <div class="row content">
+   <div class="col-md-3">
+      <div class="sidebar col-left-first ">
+         <div class="block block-layered-nav block-layered-nav--no-filters">
+            <div class="block-title">
+               <strong><span>Shop By</span></strong>
+            </div>
+            <div class="block-content toggle-content">
+               <p class="block-subtitle block-subtitle--filter">Filter</p>
+               <dl id="narrow-by-list">
+                  <dt class="last odd">Price</dt>
+                  <dd class="last odd">
+                     <ol>
+                        <li>
+                           <a href="<?php echo $currentUrl;?>mode=grid&amp;price=1000-">
+                           <span class="price">$1,000.00</span> and above <span class="count">(1)</span>
+                           </a>
+                        </li>
+                     </ol>
+                  </dd>
+               </dl>
+               <script type="text/javascript">decorateDataList('narrow-by-list')</script>
+            </div>
+         </div>
+      </div>
+   </div>
+      <div class="col-md-9">
+         <div class="page-title category-title">
+            <h4>Flights for <?php echo $basic_search['origin'].' - '.$basic_search['destination'];?></h4>
+         </div>
+         <div class="flight-category category-description">
+            <p>Depature:<?php echo $basic_search['depature_date'];?> Return:<?php echo $basic_search['return_date'];?></p>
+            <p>Depature:<?php echo $basic_search['travel_class'];?></p>
+            <p>Adults:<?php echo $basic_search['no_adults'];?>
+              <?php if($basic_search['no_children'] > 0){
+                echo 'Children:'.$basic_search['no_children'];
+              }?>
+              <?php if($basic_search['no_infants'] > 0){
+                echo 'Infants:'.$basic_search['no_infants'];
+              }?>
+            </p>            
+         </div>
+         <div class="category-products">
+            <div class="toolbar">
+               <div class="sorter">
+                  <p class="view-mode">
+                     <label>View as</label>                    
+                     <?php if(!isset($basic_search['mode'])){?>                       
+                       <strong title="Grid" class="grid">Grid</strong>
+                       <a href="<?php echo $currentUrl?>&mode=list" title="List" class="list">List</a>                      
+                      
+                     <?php }else{?>
+                       <?php if($basic_search['mode'] == 'grid'){?>
+                       <strong title="Grid" class="grid">Grid</strong>
+                       <a href="<?php echo str_replace('mode=grid','mode=list',$currentUrl);?>" title="List" class="list">List</a>
+                       <?php }?>
+                       <?php if($basic_search['mode'] == 'list'){?>                      
+                       <a href="<?php echo str_replace('mode=list','mode=grid',$currentUrl);?>" title="Grid" class="grid">Grid</a>
+                       <strong title="List" class="list">List</strong>
+                       <?php }?>
+                     <?php }?>
+                  </p>               
+               </div>
+               <div class="pager">
+                  <div class="count-container">
+                     <p class="amount amount--no-pages">
+                        <strong>1 Item(s)</strong>
+                     </p>
+                     <div class="limiter">
+                           <label>Show</label>
+                           <select onchange="setLocation(this.value)" title="Results per page">
+                              <option value="<?php echo str_replace(array('limit=24','limit=36'),'',$currentUrl);?>&amp;limit=12" <?php if($basic_search['limit'] == 12 ){?>selected="selected"<?php }?>>
+                                 12                    
+                              </option>
+                              <option value="<?php echo str_replace(array('limit=12','limit=36'),'',$currentUrl);?>&amp;limit=24" <?php if($basic_search['limit'] == 24 ){?>selected="selected"<?php }?>>
+                                 24                    
+                              </option>
+                              <option value="<?php echo str_replace(array('limit=24','limit=12'),'',$currentUrl);?>&amp;limit=36" <?php if($basic_search['limit'] == 36 ){?>selected="selected"<?php }?>>
+                                 36                    
+                              </option>
+                           </select>
+                        </div>
+                  </div>
+               </div>
+            </div>
+            <ul class="products-grid products-grid--max-4-col first last odd">
+              <?php 
+              $results = $this->getResults()
+             /* echo '<pre>';
+              print_r($results);
+              echo '</pre>';*/
+              ?>
+              <?php foreach($results['results'] as $itn){
+                $total_price = isset($itn['fare']['total_price'])?$itn['fare']['total_price']:0;
+                $restrictions = '';
+                if($itn['fare']['restrictions']['refundable']){
+                  $restrictions .= '<p>Fare is refundable.</p>';
+                }else {
+                  $restrictions .= '<p>Fare is not refundable.</p>';
+                }
+                if($itn['fare']['restrictions']['change_penalties']){
+                  $restrictions .= '<p>Change in ticket is chargable.</p>';
+                }
+                $itn_json = json_encode($itn);
+                ?>
+               <li class="item">
+                <form action="<?php echo Mage::getUrl('amedus/index/view');?>" method="post">
+                 <input type="hidden" name="basic_search" value='<?php echo $basic_search_json;?>'>  
+                 <input type="hidden" name="total_price" value="<?php echo $total_price;?>">  
+                 <input type="hidden" name="itinerary" value='<?php echo $itn_json;?>'>  
+                  <div class="row">                  
+                   <div class="price-box pull-left">
+                     <span class="regular-price" id="product-price-1">
+                      <span class="price">$<?php echo $total_price;?></span>
+                     </span>
+                   </div>
+                   <div class="pull-right buttons">
+                   <!-- <a title="View" class="button btn-cart" href="http://localhost/amedus_magento/wishlist/index/add/product/1/form_key/dlOONlMndrvAuciY/"><span><span title="View"><i class="fa fa-heart" aria-hidden="true"></i></span></span></a> -->
+                   <a title="View" class="button btn-cart" onclick="alert('This functionality coming soon!');"><span><span title="View"><i class="fa fa-heart" aria-hidden="true"></i></span></span></a>
+                   <button type="submit" title="View" class="button btn-cart"><span><span title="View"><i class="fa fa-shopping-cart" aria-hidden="true"></i></span></span></button>      
+                   </div>              
+                  </div>
+                  <div class="product-info" style="padding-bottom: 88px; min-height: 151px;">
+                     
+                     <?php foreach($itn['itineraries'] as $itnf){
+                     
+                        $outbound = $itnf['outbound']['flights'];
+                        $inbound = isset($itnf['inbound']['flights'])?$itnf['inbound']['flights']:array();
+                        $l = count($outbound);
+                        $k = count($inbound); ?> 
+
+                        <?php if($l > 0){
+                          $nonstop = false;
+                          if($l == 1) $nonstop = true;?> <!-- Outbound flights -->
+                          <?php foreach($outbound as $flight){
+                            $airline = $flight['marketing_airline'];
+                            $flight_number = $flight['flight_number'];
+                            $aircraft = $flight['aircraft'];
+                            $travel_class = $flight['booking_info']['travel_class'];
+                            $booking_code = $flight['booking_info']['booking_code'];
+                            $seats_remaining = $flight['booking_info']['seats_remaining'];
+
+                            $org_ap = $flight['origin']['airport'];
+                            $des_ap = $flight['destination']['airport'];
+                            $depature_at = $flight['departs_at'];
+                            $arrives_at = $flight['arrives_at'];
+                            
+                            $duration = $helper->flight_duration($depature_at,$arrives_at);?>
+                         <div class="flight_row">                    
+                            <p class="flight"><img width="75px" src="https://www.igoair.com/images/airline/<?php echo $airline;?>.png"></p>
+                         <div class="row">
+                          <div class="col-md-4">
+                            <p class="flight"><strong><?php echo $org_ap;?></strong></p>                       
+                            <p class="flight_dep"><?php echo date('d/m/Y h:i',strtotime($depature_at));?></p>                       
+                         </div>
+                         <div class="col-md-2">
+                            <p><img src="<?php echo $this->getSkinUrl('images/transparent_arrow_29x28.png');?>"></p>
+                         </div>
+                         <div class="col-md-4">
+                            <p class="flight"><strong><?php echo $des_ap;?></strong> </p>                       
+                            <p class="flight_dep"><?php echo date('d/m/Y h:i', strtotime($arrives_at));?></p>
+                         </div>
+                       </div>
+                         <p class="flight" style="font-size: 11px;"><?php echo $travel_class;?> 
+                         <?php if($nonstop){?>
+                         <strong>Non Stop</strong>
+                         <?php }?>
+                         <?php echo $duration;?></p>
+                        </div>
+                       <hr>
+                        <?php }?>
+                      <?php }?>
+                      <?php if($k > 0){
+                          $nonstop = false;
+                          if($k == 1) $nonstop = true; ?> <!-- Inbound flights -->                       
+
+                          <?php foreach($inbound as $flight){
+                            $airline = $flight['marketing_airline'];
+                            $flight_number = $flight['flight_number'];
+                            $aircraft = $flight['aircraft'];
+                            $travel_class = $flight['booking_info']['travel_class'];
+                            $booking_code = $flight['booking_info']['booking_code'];
+                            $seats_remaining = $flight['booking_info']['seats_remaining'];
+
+                            $org_ap = $flight['origin']['airport'];
+                            $des_ap = $flight['destination']['airport'];
+                            $depature_at = $flight['departs_at'];
+                            $arrives_at = $flight['arrives_at'];
+                            
+                            $duration = $helper->flight_duration($depature_at,$arrives_at);?>
+                         <div class="flight_row">                    
+                            <p class="flight"><img width="75px" src="https://www.igoair.com/images/airline/<?php echo $airline;?>.png"></p>
+                         <div class="row">
+                          <div class="col-md-4">
+                            <p class="flight"><strong><?php echo $org_ap;?></strong></p>                       
+                            <p class="flight_dep"><?php echo date('d/m/Y h:i',strtotime($depature_at));?></p>                       
+                         </div>
+                         <div class="col-md-2">
+                            <p><img src="<?php echo $this->getSkinUrl('images/reverse_transparent_arrow_29x28.png');?>"></p>
+                         </div>
+                         <div class="col-md-4">
+                            <p class="flight"><strong><?php echo $des_ap;?></strong> </p>                       
+                            <p class="flight_dep"><?php echo date('d/m/Y h:i', strtotime($arrives_at));?></p>
+                         </div>
+                       </div>
+                         <p class="flight" style="font-size: 11px;"><?php echo $travel_class;?> 
+                         <?php if($nonstop){?>
+                         <strong>Non Stop</strong>
+                         <?php }?>
+                         <?php echo $duration;?></p>
+                        </div>
+                       <hr>
+                        <?php }?>
+                      <?php }?>
+                    <?php }?>                 
+                  </div>              
+               </form>
+              </li>
+            <?php }?>              
+            </ul>
+
+
+            <script type="text/javascript">decorateGeneric($$('ul.products-grid'), ['odd','even','first','last'])</script>
+            <div class="toolbar-bottom">
+               <div class="toolbar">
+                  <div class="sorter">
+                     <p class="view-mode">
+                        <label>View as</label>
+                        <?php if(!isset($basic_search['mode'])){?>                       
+                         <strong title="Grid" class="grid">Grid</strong>
+                         <a href="<?php echo $currentUrl?>&mode=list" title="List" class="list">List</a>                      
+                        
+                       <?php }else{?>
+                         <?php if($basic_search['mode'] == 'grid'){?>
+                         <strong title="Grid" class="grid">Grid</strong>
+                         <a href="<?php echo str_replace('mode=grid','mode=list',$currentUrl);?>" title="List" class="list">List</a>
+                         <?php }?>
+                         <?php if($basic_search['mode'] == 'list'){?>                      
+                         <a href="<?php echo str_replace('mode=list','mode=grid',$currentUrl);?>" title="Grid" class="grid">Grid</a>
+                         <strong title="List" class="list">List</strong>
+                         <?php }?>
+                       <?php }?>
+                     </p>
+                     
+                  </div>
+                  <div class="pager">
+                     <div class="count-container">
+                        <p class="amount amount--no-pages">
+                           <strong>1 Item(s)</strong>
+                        </p>
+                        <div class="limiter">
+                           <label>Show</label>
+                           <select onchange="setLocation(this.value)" title="Results per page">
+                              <option value="<?php echo str_replace(array('limit=24','limit=36'),'limit=12',$currentUrl);?>" <?php if(isset($basic_search['limit']) and $basic_search['limit'] == 12 ){?>selected="selected"<?php }?>>
+                                 12                    
+                              </option>
+                              <option value="<?php echo str_replace(array('limit=12','limit=36'),'limit=24',$currentUrl);?>" <?php if(isset($basic_search['limit']) and $basic_search['limit'] == 24 ){?>selected="selected"<?php }?>>
+                                 24                    
+                              </option>
+                              <option value="<?php echo str_replace(array('limit=24','limit=12'),'limit=36',$currentUrl);?>" <?php if(isset($basic_search['limit']) and $basic_search['limit'] == 36 ){?>selected="selected"<?php }?>>
+                                 36                    
+                              </option>
+                           </select>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+</div>
+<div id="loader"><img src="<?php echo $this->getSkinUrl('images/ajax-loader.gif');?>"></div>
