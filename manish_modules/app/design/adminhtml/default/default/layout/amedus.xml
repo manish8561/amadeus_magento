@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<layout version="0.1.0">
-  <amedus_adminhtml_passenger_index>
-	<reference name="content">
-	  <block type="amedus/adminhtml_passenger" name="passenger" />
-	</reference>
-  </amedus_adminhtml_passenger_index>
-</layout>
