@@ -264,6 +264,8 @@ $no_infants = ($basic_search['no_infants'] > 0)?$basic_search['no_infants']:0;
             //<![CDATA[
                 var productAddToCartForm = new VarienForm('product_addtocart_form');
                 productAddToCartForm.submit = function(button, url) {
+                  console.log('checking');
+                  return false;
                     if (this.validator.validate()) {
                         var form = this.form;
                         var oldUrl = form.action;
