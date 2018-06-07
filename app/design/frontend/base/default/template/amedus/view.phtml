@@ -296,8 +296,8 @@ echo '</pre>';*/
             //<![CDATA[
                 var productAddToCartForm = new VarienForm('product_addtocart_form');
                 productAddToCartForm.submit = function(button, url) {
-                  /*console.log('checking');
-                  return false;*/
+                  console.log('checking');
+                  return false;
                     if (this.validator.validate()) {
                         var form = this.form;
                         var oldUrl = form.action;

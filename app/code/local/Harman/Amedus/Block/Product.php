@@ -8,10 +8,9 @@ class Harman_Amedus_Block_Product extends Mage_Core_Block_Template{
 			return $r;
 		}
 	}
-
+	/*Function to generate add to cart url*/
 	public function getAddToCartUrl($product, $additional = array())
     {
-       
 
         if ($this->getRequest()->getParam('wishlist_next')) {
             $additional['wishlist_next'] = 1;

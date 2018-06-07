@@ -116,7 +116,7 @@ class Harman_Amedus_Helper_Data extends Mage_Core_Helper_Abstract
 			return Mage::getModel('catalog/product')->load($_productId);
 	    }
 		try{
-		$product
+			$product
 		//    ->setStoreId(1) //you can set data in store scope
 		    ->setWebsiteIds(array(1)) //website ID the product is assigned to, as an array
 		    ->setAttributeSetId(4) //ID of a attribute set named 'default'
@@ -166,25 +166,25 @@ class Harman_Amedus_Helper_Data extends Mage_Core_Helper_Abstract
 		    )
 		 
 		    ->setCategoryIds(array(3)); //assign product to categories
-/*Amedus details*/
-		$product->setBasicsearch($data['basic_search'])
-		->setAmedusData($data['itinerary'])
-		->setTotalPrice($data['total_price'])
-		->setDepartureDate($basic_search['depature_date']);
+			/*Amedus details*/
+			$product->setBasicsearch($data['basic_search'])
+			->setAmedusData($data['itinerary'])
+			->setTotalPrice($data['total_price'])
+			->setDepartureDate($basic_search['depature_date']);
 
-		$product->save();
+			$product->save();
 
-		$_productId = $product->getIdBySku($sku);
-		if($_productId > 0){
-			return Mage::getModel('catalog/product')->load($_productId);
-	    }
+			$_productId = $product->getIdBySku($sku);
+			if($_productId > 0){
+				return Mage::getModel('catalog/product')->load($_productId);
+		    }
 
-		//endif;
 		}catch(Exception $e){
 			print_r($e->getMessage()); die;
 			Mage::log($e->getMessage());
 		}
 	}
+	/* Function to sku*/
 	public function generateSku($search){
 		$departure_date = date('Y-m-d', strtotime($search['departure_date']));
 		return $search['origin_label'].'_'.$search['destination_label'].'_'.$departure_date.'_'.time();
