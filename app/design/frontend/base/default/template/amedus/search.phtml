@@ -1,6 +1,5 @@
 <?php
    $_resultCollection=$this->getResults();
-   echo 'results';
    $currency_code = Mage::app()->getStore()->getCurrentCurrencyCode();
 
   // echo '<pre>';
@@ -42,8 +41,8 @@
             <h4>Flights for <?php echo $basic_search['origin'].' - '.$basic_search['destination'];?></h4>
          </div>
          <div class="flight-category category-description">
-            <p>Depature:<?php echo $basic_search['depature_date'];?> Return:<?php echo $basic_search['return_date'];?></p>
-            <p>Depature:<?php echo $basic_search['travel_class'];?></p>
+            <p>Departure:<?php echo $basic_search['departure_date'];?> Return:<?php echo $basic_search['return_date'];?></p>
+            <p>Departure:<?php echo $basic_search['travel_class'];?></p>
             <p>Adults:<?php echo $basic_search['no_adults'];?>
               <?php if($basic_search['no_children'] > 0){
                 echo 'Children:'.$basic_search['no_children'];
@@ -155,7 +154,7 @@
 
                             $org_ap = $flight['origin']['airport'];
                             $des_ap = $flight['destination']['airport'];
-                            $depature_at = $flight['departs_at'];
+                            $departure_at = $flight['departs_at'];
                             $arrives_at = $flight['arrives_at'];
                             
                             $duration = $helper->flight_duration($depature_at,$arrives_at);?>
@@ -164,7 +163,7 @@
                          <div class="row">
                           <div class="col-md-4">
                             <p class="flight"><strong><?php echo $org_ap;?></strong></p>                       
-                            <p class="flight_dep"><?php echo date('d/m/Y h:i',strtotime($depature_at));?></p>                       
+                            <p class="flight_dep"><?php echo date('d/m/Y h:i',strtotime($departure_at));?></p>                       
                          </div>
                          <div class="col-md-2">
                             <p><img src="<?php echo $this->getSkinUrl('images/transparent_arrow_29x28.png');?>"></p>
@@ -197,16 +196,16 @@
 
                             $org_ap = $flight['origin']['airport'];
                             $des_ap = $flight['destination']['airport'];
-                            $depature_at = $flight['departs_at'];
+                            $departure_at = $flight['departs_at'];
                             $arrives_at = $flight['arrives_at'];
                             
-                            $duration = $helper->flight_duration($depature_at,$arrives_at);?>
+                            $duration = $helper->flight_duration($departure_at,$arrives_at);?>
                          <div class="flight_row">                    
                             <p class="flight"><img width="75px" src="https://www.igoair.com/images/airline/<?php echo $airline;?>.png"></p>
                          <div class="row">
                           <div class="col-md-4">
                             <p class="flight"><strong><?php echo $org_ap;?></strong></p>                       
-                            <p class="flight_dep"><?php echo date('d/m/Y h:i',strtotime($depature_at));?></p>                       
+                            <p class="flight_dep"><?php echo date('d/m/Y h:i',strtotime($departure_at));?></p>                       
                          </div>
                          <div class="col-md-2">
                             <p><img src="<?php echo $this->getSkinUrl('images/reverse_transparent_arrow_29x28.png');?>"></p>

@@ -1,5 +1,13 @@
-<?php
+<?php 
+/**
+ * Amedus Index Controller for frontend
+ *
+ * @category    Amedus
+ * @package     Harman_Amedus
+ * @author      Manish Sharma <manish198646@yahoo.com>
+ */
 class Harman_Amedus_IndexController extends Mage_Core_Controller_Front_Action{
+    /*form display function*/
     public function IndexAction() {      
       $this->loadLayout();   
       $this->getLayout()->getBlock("head")->setTitle($this->__("Flight Search"));
@@ -129,6 +137,7 @@ class Harman_Amedus_IndexController extends Mage_Core_Controller_Front_Action{
         return;
       }      
     }
+    /*flight product view function*/
     public function viewAction(){
         $post = $this->getRequest()->getPost();
         if(!empty($post) or 1){
@@ -154,4 +163,17 @@ class Harman_Amedus_IndexController extends Mage_Core_Controller_Front_Action{
           return;
         }  
     }
+    /* flight product save function*/
+    /*public function saveAction(){
+      $json['success'] = 'NOK';
+      $post = $this->getRequest()->getPost();
+      if(!empty($post)){
+        print_r($post);
+        exit;
+        $json['product_id'] = '1';
+        $json['success'] = 'OK';
+      }
+      $this->getResponse()->setBody(json_encode($json));
+    }*/
+
 }

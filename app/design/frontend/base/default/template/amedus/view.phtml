@@ -12,11 +12,16 @@ $itn_json = $product['itinerary'];
 $product_name = $basic_search['origin'] .' - '.$basic_search['destination'];
 
 $total_price = $product['total_price'];
-$Description = $product_name;
+$description = $product_name;
 $no_adults = $basic_search['no_adults'];
 $no_children = ($basic_search['no_children'] > 0)?$basic_search['no_children']:0;
 $no_infants = ($basic_search['no_infants'] > 0)?$basic_search['no_infants']:0;
 
+/*custom field for the product*/
+$product['name'] = $product_name;
+
+
+$form_key = Mage::getSingleton('core/session')->getFormKey();
 ?>
 
 <div class="col-main">  
@@ -35,10 +40,20 @@ $no_infants = ($basic_search['no_infants'] > 0)?$basic_search['no_infants']:0;
                   $restrictions .= '<p>Change in ticket is chargable.</p>';
                 }
                 $itn_json = json_encode($itinerary);
-                $Description .= '<br>'.$restrictions;
+                $description .= '<br>'.$restrictions;
+
+/*saving the product*/
+$product['description'] = $description;
+$_product = $helper->saveProduct($product);
+/*echo '<pre>';
+print_r($_product); 
+echo '</pre>';*/
+
+
                 ?>
-         <form action="http://localhost/amedus_magento/checkout/cart/add/uenc/aHR0cDovL2xvY2FsaG9zdC9hbWVkdXNfbWFnZW50by9mbGlnaHRzL2xvbi1kZWwuaHRtbA,,/product/1/form_key/FHNpyDoyKMoH8wYA/" method="post" id="product_addtocart_form">
-            <input name="form_key" type="hidden" value="FHNpyDoyKMoH8wYA">
+<!--          <form action="http://localhost/amedus_magento/checkout/cart/add/uenc/aHR0cDovL2xvY2FsaG9zdC9hbWVkdXNfbWFnZW50by9mbGlnaHRzL2xvbi1kZWwuaHRtbA,,/product/1/form_key/FHNpyDoyKMoH8wYA/" method="post" id="product_addtocart_form"> -->
+         <form action="<?php echo $this->getAddToCartUrl($_product, array('_secure' => $this->_isSecure())) ?>" method="post" id="product_addtocart_form">
+            <input name="form_key" type="hidden" value="<?php echo $form_key; ?>">
             <div class="no-display">
                <input type="hidden" name="product" value="1" id="product_id">
                <input type="hidden" name="related_product" id="related-products-field" value="">
@@ -70,10 +85,10 @@ $no_infants = ($basic_search['no_infants'] > 0)?$basic_search['no_infants']:0;
 
                           $org_ap = $flight['origin']['airport'];
                           $des_ap = $flight['destination']['airport'];
-                          $depature_at = $flight['departs_at'];
+                          $departure_at = $flight['departs_at'];
                           $arrives_at = $flight['arrives_at'];
                           
-                          $duration = $helper->flight_duration($depature_at,$arrives_at);?>
+                          $duration = $helper->flight_duration($departure_at,$arrives_at);?>
                         <div class="row">
                           <div class="col-md-3"><img width="100px" src="https://www.igoair.com/images/airline/<?php echo $airline;?>.png"></div>
                           <div class="col-md-3">
@@ -86,7 +101,7 @@ $no_infants = ($basic_search['no_infants'] > 0)?$basic_search['no_infants']:0;
                             <p>Seats: <?php echo $seats_remaining;?></p>
                           </div>
                           <div class="col-md-3">                           
-                            <p>Departure: <?php echo date('d/m/Y h:i',strtotime($depature_at));?></p>
+                            <p>Departure: <?php echo date('d/m/Y h:i',strtotime($departure_at));?></p>
                             <p>Arrival: <?php echo date('d/m/Y h:i',strtotime($arrives_at));?></p>                            
                           </div>                          
                         </div>
@@ -106,10 +121,10 @@ $no_infants = ($basic_search['no_infants'] > 0)?$basic_search['no_infants']:0;
 
                           $org_ap = $flight['origin']['airport'];
                           $des_ap = $flight['destination']['airport'];
-                          $depature_at = $flight['departs_at'];
+                          $departure_at = $flight['departs_at'];
                           $arrives_at = $flight['arrives_at'];
                           
-                          $duration = $helper->flight_duration($depature_at,$arrives_at);?>
+                          $duration = $helper->flight_duration($departure_at,$arrives_at);?>
                         <div class="row">
                           <div class="col-md-3"><img width="100px" src="https://www.igoair.com/images/airline/<?php echo $airline;?>.png"></div>
                           <div class="col-md-3">
@@ -122,7 +137,7 @@ $no_infants = ($basic_search['no_infants'] > 0)?$basic_search['no_infants']:0;
                             <p>Seats: <?php echo $seats_remaining;?></p>
                           </div>
                           <div class="col-md-3">                           
-                            <p>Departure: <?php echo date('d/m/Y h:i',strtotime($depature_at));?></p>
+                            <p>Departure: <?php echo date('d/m/Y h:i',strtotime($departure_at));?></p>
                             <p>Arrival: <?php echo date('d/m/Y h:i',strtotime($arrives_at));?></p>                            
                           </div>
                           
@@ -237,24 +252,41 @@ $no_infants = ($basic_search['no_infants'] > 0)?$basic_search['no_infants']:0;
                         <input type="text" pattern="\d*(\.\d+)?" name="qty" id="qty" maxlength="12" value="1" title="Qty" class="input-text qty">
                      </div>
                      <div class="add-to-cart-buttons">
-                        <button type="button" title="Add to Cart" class="button btn-cart" onclick="productAddToCartForm.submit(this)"><span><span>Book Now</span></span></button>
+                        <button type="button" title="Book Now" class="button btn-cart" onclick="productAddToCartForm.submit(this)"><span><span>Book Now</span></span></button>
                      </div>
                   </div>
                   <span class="or">OR</span>
+                  <?php $_wishlistSubmitUrl = $this->helper('wishlist')->getAddUrl($_product); ?>
                   <ul class="add-to-links">
-                     <li><a href="http://localhost/amedus_magento/wishlist/index/add/product/1/form_key/FHNpyDoyKMoH8wYA/" onclick="productAddToCartForm.submitLight(this, this.href); return false;" class="link-wishlist">Add to Wishlist</a></li>
-                     <li><span class="separator">|</span> <a href="http://localhost/amedus_magento/catalog/product_compare/add/product/1/uenc/aHR0cDovL2xvY2FsaG9zdC9hbWVkdXNfbWFnZW50by9mbGlnaHRzL2xvbi1kZWwuaHRtbA,,/form_key/FHNpyDoyKMoH8wYA/" class="link-compare">Add to Compare</a></li>
+                  <?php if ($this->helper('wishlist')->isAllow()) : ?>
+                      <li><a href="<?php echo $_wishlistSubmitUrl ?>" onclick="productAddToCartForm.submitLight(this, this.href); return false;" class="link-wishlist"><?php echo $this->__('Add to Wishlist') ?></a></li>
+                  <?php endif; ?>
+                  <?php
+                      $_compareUrl = $this->helper('catalog/product_compare')->getAddUrl($_product);
+                  ?>
+                  <?php if($_compareUrl) : ?>
+                      <li><span class="separator">|</span> <a href="<?php echo $_compareUrl ?>" class="link-compare"><?php echo $this->__('Add to Compare') ?></a></li>
+                  <?php endif; ?>
                   </ul>
                   <ul class="sharing-links">
-                     <li><a href="http://localhost/amedus_magento/sendfriend/product/send/id/1/cat_id/3/" class="link-email-friend" title="Email to a Friend">Email to a Friend</a></li>
-                     <li>
-                        <a href="http://www.facebook.com/sharer.php?s=100&amp;p[url]=http%3A%2F%2Flocalhost%2Famedus_magento%2Fflights%2Flon-del.html&amp;p[images][0]=http%3A%2F%2Flocalhost%2Famedus_magento%2Fmedia%2Fcatalog%2Fproduct%2Fcache%2F1%2Fimage%2F9df78eab33525d08d6e5fb8d27136e95%2F1%2Fi%2F1i.png&amp;p[title]=LON+-+DEL&amp;p[summary]=LON+-+DEL" target="_blank" title="Share on Facebook" class="link-facebook">
-                        Share Facebook        </a>
-                     </li>
-                     <li>
-                        <a href="http://twitter.com/home?status=LON+-+DEL+http%3A%2F%2Flocalhost%2Famedus_magento%2Fflights%2Flon-del.html" target="_blank" title="Share on Twitter" class="link-twitter">Share on Twitter</a>
-                     </li>
-                  </ul>
+                  <?php if (1): ?>
+                      <li><a href="<?php echo $this->helper('catalog/product')->getEmailToFriendUrl($_product) ?>" class="link-email-friend" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Email to a Friend')) ?>"><?php echo $this->__('Email to a Friend') ?></a></li>
+                  <?php endif; ?>
+
+                  <?php $_helper2 = $this->helper('catalog/output'); ?>
+                  <?php $_productName = urlencode(trim($product['name']))?>
+                  <?php $_productImageUrl = urlencode(trim($this->helper('catalog/image')->init($_product, 'image')))?>
+                  <?php $_productUrl = urlencode(trim($_product->getProductUrl()))?>
+                  <li>
+                      <?php $_u = 'p[url]=' . $_productUrl . '&p[images][0]=' . $_productImageUrl . '&p[title]=' . $_productName . '&p[summary]=' . urlencode(trim($product['description'])); ?>
+                      <a href="<?php echo 'http://www.facebook.com/sharer.php?s=100&' . $_u; ?>" target="_blank" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Share on Facebook')) ?>" class="link-facebook">
+                          <?php echo $this->__('Share Facebook') ?>
+                      </a>
+                  </li>
+                  <li>
+                      <a href="<?php echo 'http://twitter.com/home?status=' . $_productName . '+' . $_productUrl; ?>" target="_blank" title="<?php echo Mage::helper('core')->quoteEscape($this->__('Share on Twitter')) ?>" class="link-twitter"><?php echo $this->__('Share on Twitter') ?></a>
+                  </li>
+              </ul>
                </div>
             </div>
             <div class="clearer"></div>
@@ -264,8 +296,8 @@ $no_infants = ($basic_search['no_infants'] > 0)?$basic_search['no_infants']:0;
             //<![CDATA[
                 var productAddToCartForm = new VarienForm('product_addtocart_form');
                 productAddToCartForm.submit = function(button, url) {
-                  console.log('checking');
-                  return false;
+                  /*console.log('checking');
+                  return false;*/
                     if (this.validator.validate()) {
                         var form = this.form;
                         var oldUrl = form.action;
@@ -321,7 +353,7 @@ $no_infants = ($basic_search['no_infants'] > 0)?$basic_search['no_infants']:0;
                <div class="tab-content">
                   <h2>Details</h2>
                   <div class="std">
-                     <?php echo $Description;?>    
+                     <?php echo $description;?>    
                   </div>
                </div>
             </dd>
@@ -372,4 +404,5 @@ $no_infants = ($basic_search['no_infants'] > 0)?$basic_search['no_infants']:0;
       }
       Mage.Cookies.set('external_no_cache', 1, expireAt);
    </script>
+   <!-- wait -->
 </div>
