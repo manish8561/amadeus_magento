@@ -163,17 +163,61 @@ class Harman_Amedus_IndexController extends Mage_Core_Controller_Front_Action{
           return;
         }  
     }
-    /* flight product save function*/
-    /*public function saveAction(){
+    /* flight product save passenger function*/
+    public function savePassengerAction(){
+
       $json['success'] = 'NOK';
       $post = $this->getRequest()->getPost();
       if(!empty($post)){
-        print_r($post);
-        exit;
-        $json['product_id'] = '1';
+        $product_id = $post['product'];
+        /*add new adult data*/
+        if(!empty($post['adult'])){
+          foreach ($post['adult'] as $p) {
+            $model = Mage::getModel("amedus/passenger");
+            $model->setPassengerType('adult')
+              ->setProductId($product_id)
+              ->setFirstname($p['firstname'])
+              ->setMiddlename($p['middlename'])
+              ->setLastname($p['lastname'])
+              ->setGender($p['gender'])
+              ->setDob($p['dob'])
+              ->setStatus('active');
+              $model->save();
+          }
+        }
+        /*add new child data*/
+        if(!empty($post['child'])){
+          foreach ($post['child'] as $p) {
+            $model = Mage::getModel("amedus/passenger");
+            $model->setPassengerType('child')
+              ->setProductId($product_id)
+              ->setFirstname($p['firstname'])
+              ->setMiddlename($p['middlename'])
+              ->setLastname($p['lastname'])
+              ->setGender($p['gender'])
+              ->setDob($p['dob'])
+              ->setStatus('active');
+              $model->save();
+          }
+        }
+        /*add new infant data*/
+        if(!empty($post['infant'])){
+          foreach ($post['infant'] as $p) {
+            $model = Mage::getModel("amedus/passenger");
+            $model->setPassengerType('infant')
+              ->setProductId($product_id)
+              ->setFirstname($p['firstname'])
+              ->setMiddlename($p['middlename'])
+              ->setLastname($p['lastname'])
+              ->setGender($p['gender'])
+              ->setDob($p['dob'])
+              ->setStatus('active');
+              $model->save();
+          }
+        }
         $json['success'] = 'OK';
       }
       $this->getResponse()->setBody(json_encode($json));
-    }*/
+    }
 
 }

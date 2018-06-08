@@ -55,7 +55,7 @@ echo '</pre>';*/
          <form action="<?php echo $this->getAddToCartUrl($_product, array('_secure' => $this->_isSecure())) ?>" method="post" id="product_addtocart_form">
             <input name="form_key" type="hidden" value="<?php echo $form_key; ?>">
             <div class="no-display">
-               <input type="hidden" name="product" value="1" id="product_id">
+               <input type="hidden" name="product" value="<?php echo $_product->getId() ?>" id="product_id">
                <input type="hidden" name="related_product" id="related-products-field" value="">
                <input type="hidden" name="basic_search" value='<?php echo $basic_search_json;?>'>  
                  <input type="hidden" name="total_price" value="<?php echo $total_price;?>">  
@@ -172,7 +172,7 @@ echo '</pre>';*/
                             <input type="text" placeholder="First Name" name="adult[<?php echo $i;?>][firstname]" class="form-control" required="required">
                           </div>
                           <div class="col-md-2">
-                            <input type="text" placeholder="Middle Name" name="adult[<?php echo $i;?>][middlename]" class="form-control" required="required">
+                            <input type="text" placeholder="Middle Name" name="adult[<?php echo $i;?>][middlename]" class="form-control">
                           </div>
                           <div class="col-md-2">
                             <input type="text" placeholder="Last Name" name="adult[<?php echo $i;?>][lastname]" class="form-control" required="required">
@@ -197,7 +197,7 @@ echo '</pre>';*/
                               <input type="text" placeholder="First Name" name="child[<?php echo $i;?>][firstname]" class="form-control" required="required">
                             </div>
                             <div class="col-md-2">
-                              <input type="text" placeholder="Middle Name" name="child[<?php echo $i;?>][middlename]" class="form-control" required="required">
+                              <input type="text" placeholder="Middle Name" name="child[<?php echo $i;?>][middlename]" class="form-control">
                             </div>
                             <div class="col-md-2">
                               <input type="text" placeholder="Last Name" name="child[<?php echo $i;?>][lastname]" class="form-control" required="required">
@@ -223,7 +223,7 @@ echo '</pre>';*/
                               <input type="text" placeholder="First Name" name="infant[<?php echo $i;?>][firstname]" class="form-control" required="required">
                             </div>
                             <div class="col-md-2">
-                              <input type="text" placeholder="Middle Name" name="infant[<?php echo $i;?>][middlename]" class="form-control" required="required">
+                              <input type="text" placeholder="Middle Name" name="infant[<?php echo $i;?>][middlename]" class="form-control">
                             </div>
                             <div class="col-md-2">
                               <input type="text" placeholder="Last Name" name="infant[<?php echo $i;?>][lastname]" class="form-control" required="required">
@@ -296,8 +296,10 @@ echo '</pre>';*/
             //<![CDATA[
                 var productAddToCartForm = new VarienForm('product_addtocart_form');
                 productAddToCartForm.submit = function(button, url) {
-                  console.log('checking');
-                  return false;
+                    if(!createPassenger(productAddToCartForm)){
+                      return false;
+                    }
+                  
                     if (this.validator.validate()) {
                         var form = this.form;
                         var oldUrl = form.action;
@@ -322,6 +324,9 @@ echo '</pre>';*/
                 }.bind(productAddToCartForm);
             
                 productAddToCartForm.submitLight = function(button, url){
+                    if(!createPassenger(productAddToCartForm)){
+                      return false;
+                    }
                     if(this.validator) {
                         var nv = Validation.methods;
                         delete Validation.methods['required-entry'];
@@ -343,6 +348,40 @@ echo '</pre>';*/
                         Object.extend(Validation.methods, nv);
                     }
                 }.bind(productAddToCartForm);
+
+                function createPassenger(productAddToCartForm){
+                  /*validating passenger fields*/
+                  var inputFields = productAddToCartForm.form.getInputs();
+                  var errorCheck = false;
+                  jQuery.each(inputFields, function(index, value){ 
+                    if(jQuery(this).prop('required')){ 
+                      if(jQuery(this).val() == ''){
+                        errorCheck = true;
+                        jQuery(this).parent().addClass('has-error');
+                      } else {
+                        jQuery(this).parent().removeClass('has-error');
+                      }   
+                    }
+                  });
+                  if(errorCheck){
+                    alert('Enter values in all specified fields before booking!');
+                    return false;
+                  }
+               
+                    /*submitting the pessenger details with product*/
+                    jQuery.ajax({
+                      url:'<?php echo Mage::getUrl('amedus/index/savePassenger');?>',
+                      type:'POST',
+                      dataType:'json',
+                      data: productAddToCartForm.form.serialize(),
+                      success:function(json){
+                        if(json.success == 'OK'){
+                          return true;
+                        }
+                      }
+                    });
+                    return true;
+                }
             //]]>
          </script>
       </div>

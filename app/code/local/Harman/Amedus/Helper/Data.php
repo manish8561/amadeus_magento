@@ -120,7 +120,8 @@ class Harman_Amedus_Helper_Data extends Mage_Core_Helper_Abstract
 		//    ->setStoreId(1) //you can set data in store scope
 		    ->setWebsiteIds(array(1)) //website ID the product is assigned to, as an array
 		    ->setAttributeSetId(4) //ID of a attribute set named 'default'
-		    ->setTypeId('simple') //product type
+		    //->setTypeId('simple') //product type
+		    ->setTypeId('virtual') //product type is flight reservation
 		    //->setCreatedAt(time()) //product creation time
 		//    ->setUpdatedAt(strtotime('now')) //product update time
 		 
