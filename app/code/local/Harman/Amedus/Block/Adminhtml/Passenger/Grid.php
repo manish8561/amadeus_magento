@@ -27,7 +27,12 @@ class Harman_Amedus_Block_Adminhtml_Passenger_Grid extends Mage_Adminhtml_Block_
 			    "type" => "number",
 				"index" => "id",
 			));
-            
+            $this->addColumn('passenger_type', array(
+				'header' => Mage::helper('amedus')->__('Passenger Type'),
+				'index' => 'passenger_type',
+				'type' => 'options',
+				'options'=>Harman_Amedus_Block_Adminhtml_Passenger_Grid::getOptionArray6(),				
+			));
 			$this->addColumn("firstname", array(
 				"header" => Mage::helper("amedus")->__("First Name"),
 				"index" => "firstname",
@@ -58,10 +63,16 @@ class Harman_Amedus_Block_Adminhtml_Passenger_Grid extends Mage_Adminhtml_Block_
 				'type' => 'options',
 				'options'=>Harman_Amedus_Block_Adminhtml_Passenger_Grid::getOptionArray5(),				
 			));
+			/*$this->addColumn("product_id", array(
+				"header" => Mage::helper("amedus")->__("Product"),
+				"index" => "product_id",
+			));*/
 			$this->addColumn("product_id", array(
 				"header" => Mage::helper("amedus")->__("Product"),
 				"index" => "product_id",
-			));
+	            'width'     => '97',
+	            'renderer' => 'Harman_Amedus_Block_Adminhtml_Passenger_Grid_Renderer_Product'
+        	));
 			
 			$this->addColumn("order_id", array(
 				"header" => Mage::helper("amedus")->__("Order Id"),
@@ -76,7 +87,7 @@ class Harman_Amedus_Block_Adminhtml_Passenger_Grid extends Mage_Adminhtml_Block_
 
 		public function getRowUrl($row)
 		{
-			   return $this->getUrl("*/*/edit", array("id" => $row->getId()));
+			return $this->getUrl("*/*/edit", array("id" => $row->getId()));
 		}
 
 
@@ -127,6 +138,22 @@ class Harman_Amedus_Block_Adminhtml_Passenger_Grid extends Mage_Adminhtml_Block_
             return($data_array);
 
 		}
-		
+		static public function getOptionArray6()
+		{
+            $data_array=array(); 
+			$data_array['adult']='Adult';
+			$data_array['child']='Child';
+			$data_array['infant']='Infant';
+            return($data_array);
+		}
+		static public function getValueArray6()
+		{
+            $data_array=array();
+			foreach(Harman_Amedus_Block_Adminhtml_Passenger_Grid::getOptionArray6() as $k=>$v){
+               $data_array[]=array('value'=>$k,'label'=>$v);		
+			}
+            return($data_array);
+
+		}		
 
 }

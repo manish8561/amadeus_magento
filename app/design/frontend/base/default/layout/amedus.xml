@@ -56,7 +56,7 @@
       <action method="setTemplate"><template>page/1column.phtml</template></action>   
     </reference>   
     <reference name="content">      
-      <block type="amedus/search" name="amedus_view" template="amedus/view.phtml"/>   
+      <block type="amedus/product" name="amedus_view" template="amedus/view.phtml"/>   
     </reference>   
   </amedus_index_view>   
 </layout>   

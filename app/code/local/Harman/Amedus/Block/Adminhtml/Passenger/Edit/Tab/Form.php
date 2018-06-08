@@ -8,6 +8,13 @@ class Harman_Amedus_Block_Adminhtml_Passenger_Edit_Tab_Form extends Mage_Adminht
 				$this->setForm($form);
 				$fieldset = $form->addFieldset("amedus_form", array("legend"=>Mage::helper("amedus")->__("Passenger information")));
 
+				$fieldset->addField('passenger_type', 'select', array(
+					'label'     => Mage::helper('amedus')->__('Passenger Type'),
+					'values'   => Harman_Amedus_Block_Adminhtml_Passenger_Grid::getValueArray6(),
+					'name' => 'passenger_type',					
+					"class" => "required-entry",
+					"required" => true,
+				));
 				
 				$fieldset->addField("firstname", "text", array(
 					"label" => Mage::helper("amedus")->__("First Name"),					

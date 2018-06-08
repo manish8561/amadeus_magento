@@ -6329,6 +6329,10 @@ p.product-name a:hover {
 .cart-table .product-cart-actions {
   padding-left: 15px;
 }
+.cart-table .product-cart-info {
+  padding-left: 0px;
+  width:50%;
+}
 .cart-table tr {
   border-bottom: 1px solid silver;
 }

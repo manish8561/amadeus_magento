@@ -1,5 +1,13 @@
-<?php
+<?php 
+/**
+ * Amedus Index Controller for frontend
+ *
+ * @category    Amedus
+ * @package     Harman_Amedus
+ * @author      Manish Sharma <manish198646@yahoo.com>
+ */
 class Harman_Amedus_IndexController extends Mage_Core_Controller_Front_Action{
+    /*form display function*/
     public function IndexAction() {      
       $this->loadLayout();   
       $this->getLayout()->getBlock("head")->setTitle($this->__("Flight Search"));
@@ -129,6 +137,7 @@ class Harman_Amedus_IndexController extends Mage_Core_Controller_Front_Action{
         return;
       }      
     }
+    /*flight product view function*/
     public function viewAction(){
         $post = $this->getRequest()->getPost();
         if(!empty($post) or 1){
@@ -154,4 +163,61 @@ class Harman_Amedus_IndexController extends Mage_Core_Controller_Front_Action{
           return;
         }  
     }
+    /* flight product save passenger function*/
+    public function savePassengerAction(){
+
+      $json['success'] = 'NOK';
+      $post = $this->getRequest()->getPost();
+      if(!empty($post)){
+        $product_id = $post['product'];
+        /*add new adult data*/
+        if(!empty($post['adult'])){
+          foreach ($post['adult'] as $p) {
+            $model = Mage::getModel("amedus/passenger");
+            $model->setPassengerType('adult')
+              ->setProductId($product_id)
+              ->setFirstname($p['firstname'])
+              ->setMiddlename($p['middlename'])
+              ->setLastname($p['lastname'])
+              ->setGender($p['gender'])
+              ->setDob($p['dob'])
+              ->setStatus('active');
+              $model->save();
+          }
+        }
+        /*add new child data*/
+        if(!empty($post['child'])){
+          foreach ($post['child'] as $p) {
+            $model = Mage::getModel("amedus/passenger");
+            $model->setPassengerType('child')
+              ->setProductId($product_id)
+              ->setFirstname($p['firstname'])
+              ->setMiddlename($p['middlename'])
+              ->setLastname($p['lastname'])
+              ->setGender($p['gender'])
+              ->setDob($p['dob'])
+              ->setStatus('active');
+              $model->save();
+          }
+        }
+        /*add new infant data*/
+        if(!empty($post['infant'])){
+          foreach ($post['infant'] as $p) {
+            $model = Mage::getModel("amedus/passenger");
+            $model->setPassengerType('infant')
+              ->setProductId($product_id)
+              ->setFirstname($p['firstname'])
+              ->setMiddlename($p['middlename'])
+              ->setLastname($p['lastname'])
+              ->setGender($p['gender'])
+              ->setDob($p['dob'])
+              ->setStatus('active');
+              $model->save();
+          }
+        }
+        $json['success'] = 'OK';
+      }
+      $this->getResponse()->setBody(json_encode($json));
+    }
+
 }

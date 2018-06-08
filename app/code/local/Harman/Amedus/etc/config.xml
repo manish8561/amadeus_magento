@@ -68,6 +68,28 @@
     </connection>
     </amedus_read>
   </resources>
+  <events>
+   <checkout_cart_add_product_complete> <!-- identifier of the event we want to catch -->
+        <observers>
+          <checkout_cart_add_product_complete_handler> <!-- identifier of the event handler -->
+            <type>model</type> <!-- class method call type; valid are model, object and singleton -->
+            <class>amedus/observer</class> <!-- observers class alias -->
+            <method>addQuote</method>  <!-- observer's method to be called -->
+            <args></args> <!-- additional arguments passed to observer -->
+          </checkout_cart_add_product_complete_handler>
+        </observers>
+      </checkout_cart_add_product_complete>
+    <sales_convert_quote_to_order> <!-- identifier of the event we want to catch -->
+        <observers>
+          <sales_convert_quote_to_order_handler> <!-- identifier of the event handler -->
+            <type>model</type> <!-- class method call type; valid are model, object and singleton -->
+            <class>amedus/observer</class> <!-- observers class alias -->
+            <method>addOrder</method>  <!-- observer's method to be called -->
+            <args></args> <!-- additional arguments passed to observer -->
+          </sales_convert_quote_to_order_handler>
+        </observers>
+      </sales_convert_quote_to_order>
+    </events>
   </global>
   <admin>
   <routers>

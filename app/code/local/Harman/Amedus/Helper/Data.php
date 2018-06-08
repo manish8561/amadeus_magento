@@ -100,5 +100,95 @@ class Harman_Amedus_Helper_Data extends Mage_Core_Helper_Abstract
 
 	    return $difff;
 	}
+
+	/*save product function */
+	public function saveProduct($data){		
+
+		//Mage::app()->setCurrentStore(Mage_Core_Model_App::ADMIN_STORE_ID);
+		$product = Mage::getModel('catalog/product');
+
+		$basic_search = json_decode($data['basic_search'], true); 
+
+		$sku = $this->generateSku($basic_search);
+		/*echo $sku; exit;*/		
+		$_productId = $product->getIdBySku($sku);
+		if($_productId > 0){
+			return Mage::getModel('catalog/product')->load($_productId);
+	    }
+		try{
+			$product
+		//    ->setStoreId(1) //you can set data in store scope
+		    ->setWebsiteIds(array(1)) //website ID the product is assigned to, as an array
+		    ->setAttributeSetId(4) //ID of a attribute set named 'default'
+		    //->setTypeId('simple') //product type
+		    ->setTypeId('virtual') //product type is flight reservation
+		    //->setCreatedAt(time()) //product creation time
+		//    ->setUpdatedAt(strtotime('now')) //product update time
+		 
+		    ->setSku($sku) //SKU
+		    ->setName($data['name']) //product name
+		    ->setWeight(1.0000)
+		    ->setStatus(1) //product status (1 - enabled, 2 - disabled)
+		    ->setTaxClassId(2) //tax class (0 - none, 1 - default, 2 - taxable, 4 - shipping)
+		    ->setVisibility(Mage_Catalog_Model_Product_Visibility::VISIBILITY_NOT_VISIBLE) //catalog and search visibility
+		    /*->setManufacturer(28) //manufacturer id
+		    ->setColor(24)
+		    ->setNewsFromDate('06/26/2014') //product set as new from
+		    ->setNewsToDate('06/30/2014') //product set as new to
+		    ->setCountryOfManufacture('AF') //country of manufacture (2-letter country code)*/
+		 
+		    ->setPrice($data['total_price']) //price in form 11.22
+		    /*->setCost(22.33) //price in form 11.22
+		    ->setSpecialPrice(00.44) //special price in form 11.22
+		    ->setSpecialFromDate('06/1/2014') //special price from (MM-DD-YYYY)
+		    ->setSpecialToDate('06/30/2014') //special price to (MM-DD-YYYY)
+		    ->setMsrpEnabled(1) //enable MAP
+		    ->setMsrpDisplayActualPriceType(1) //display actual price (1 - on gesture, 2 - in cart, 3 - before order confirmation, 4 - use config)
+		    ->setMsrp(99.99) //Manufacturer's Suggested Retail Price*/
+		 
+		    ->setMetaTitle($data['name'])
+		    ->setMetaKeyword($data['name'])
+		    ->setMetaDescription($data['description'])
+		 
+		    ->setDescription($data['description'])
+		    ->setShortDescription($data['description'])
+		 
+		    /*->setMediaGallery (array('images'=>array (), 'values'=>array ())) //media gallery initialization
+		    ->addImageToMediaGallery('media/catalog/product/1/0/10243-1.png', array('image','thumbnail','small_image'), false, false) //assigning image, thumb and small image to media gallery*/
+		 
+		    ->setStockData(array(
+		                       'use_config_manage_stock' => 0, //'Use config settings' checkbox
+		                       'manage_stock'=>0, //manage stock
+		                       'min_sale_qty'=>0, //Minimum Qty Allowed in Shopping Cart
+		                       'max_sale_qty'=>0, //Maximum Qty Allowed in Shopping Cart
+		                       'is_in_stock' => 1, //Stock Availability
+		                       'qty' => 1 //qty
+		                   )
+		    )
+		 
+		    ->setCategoryIds(array(3)); //assign product to categories
+			/*Amedus details*/
+			$product->setBasicsearch($data['basic_search'])
+			->setAmedusData($data['itinerary'])
+			->setTotalPrice($data['total_price'])
+			->setDepartureDate($basic_search['depature_date']);
+
+			$product->save();
+
+			$_productId = $product->getIdBySku($sku);
+			if($_productId > 0){
+				return Mage::getModel('catalog/product')->load($_productId);
+		    }
+
+		}catch(Exception $e){
+			print_r($e->getMessage()); die;
+			Mage::log($e->getMessage());
+		}
+	}
+	/* Function to sku*/
+	public function generateSku($search){
+		$departure_date = date('Y-m-d', strtotime($search['departure_date']));
+		return $search['origin_label'].'_'.$search['destination_label'].'_'.$departure_date.'_'.time();
+	}
 }
 	 
