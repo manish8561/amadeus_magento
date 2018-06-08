@@ -130,7 +130,7 @@ class Harman_Amedus_Helper_Data extends Mage_Core_Helper_Abstract
 		    ->setWeight(1.0000)
 		    ->setStatus(1) //product status (1 - enabled, 2 - disabled)
 		    ->setTaxClassId(2) //tax class (0 - none, 1 - default, 2 - taxable, 4 - shipping)
-		    ->setVisibility(Mage_Catalog_Model_Product_Visibility::VISIBILITY_BOTH) //catalog and search visibility
+		    ->setVisibility(Mage_Catalog_Model_Product_Visibility::VISIBILITY_NOT_VISIBLE) //catalog and search visibility
 		    /*->setManufacturer(28) //manufacturer id
 		    ->setColor(24)
 		    ->setNewsFromDate('06/26/2014') //product set as new from

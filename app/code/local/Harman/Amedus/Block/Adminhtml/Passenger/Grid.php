@@ -63,10 +63,16 @@ class Harman_Amedus_Block_Adminhtml_Passenger_Grid extends Mage_Adminhtml_Block_
 				'type' => 'options',
 				'options'=>Harman_Amedus_Block_Adminhtml_Passenger_Grid::getOptionArray5(),				
 			));
+			/*$this->addColumn("product_id", array(
+				"header" => Mage::helper("amedus")->__("Product"),
+				"index" => "product_id",
+			));*/
 			$this->addColumn("product_id", array(
 				"header" => Mage::helper("amedus")->__("Product"),
 				"index" => "product_id",
-			));
+	            'width'     => '97',
+	            'renderer' => 'Harman_Amedus_Block_Adminhtml_Passenger_Grid_Renderer_Product'
+        	));
 			
 			$this->addColumn("order_id", array(
 				"header" => Mage::helper("amedus")->__("Order Id"),
